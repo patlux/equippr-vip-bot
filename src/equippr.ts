@@ -16,6 +16,8 @@ export interface EquipprVipBotOptions {
   maxWaitTimeMine: number;
   minWaitTimeFlip: number;
   maxWaitTimeFlip: number;
+  minWaitTimeSearch: number;
+  maxWaitTimeSearch: number;
 }
 
 async function sendMessage(client: Client, channelId: string, msg: string): Promise<void> {
@@ -77,6 +79,14 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
       }
     }
 
+    async function sendSearch() {
+      try {
+        await sendMessage(client, conf.channelId, '!search');
+      } catch (error) {
+        warn('Error while sendFlip():', error);
+      }
+    }
+
     await sendMine();
 
     setInterval(() => {
@@ -86,6 +96,10 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
     setInterval(() => {
       sendFlip();
     }, randomNumber(conf.minWaitTimeFlip, conf.maxWaitTimeFlip));
+
+    setInterval(() => {
+      sendSearch();
+    }, randomNumber(conf.minWaitTimeSearch, conf.maxWaitTimeSearch));
   };
 
   return startBot;
