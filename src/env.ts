@@ -19,6 +19,8 @@ export interface AppEnv {
   maxWaitTimeMine: number;
   minWaitTimeFlip: number;
   maxWaitTimeFlip: number;
+  minWaitTimeStats: number;
+  maxWaitTimeStats: number;
 }
 
 const appEnv: AppEnv = {
@@ -28,6 +30,8 @@ const appEnv: AppEnv = {
   maxWaitTimeMine: parseNumber(process.env.MAX_WAITTIME_MINE, 189000),
   minWaitTimeFlip: parseNumber(process.env.MIN_WAITTIME_FLIP, 609000),
   maxWaitTimeFlip: parseNumber(process.env.MAX_WAITTIME_FLIP, 609000),
+  minWaitTimeStats: parseNumber(process.env.MIN_WAITTIME_STATS, 3600000),
+  maxWaitTimeStats: parseNumber(process.env.MAX_WAITTIME_STATS, 3780000),
 };
 
 export default appEnv;

@@ -3,8 +3,8 @@ import { MessageMentions } from 'discord.js';
 
 export interface MessageEmbedLight {
   type: string | 'rich';
-  title: string;
-  author?: { name: string };
+  title: string | null;
+  author: { name?: string } | null;
   fields?: Array<{ name: string; value: string; inline?: boolean }>;
 }
 

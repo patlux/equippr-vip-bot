@@ -23,6 +23,8 @@ async function main() {
     maxWaitTimeMine: appEnv.maxWaitTimeMine,
     minWaitTimeFlip: appEnv.minWaitTimeFlip,
     maxWaitTimeFlip: appEnv.maxWaitTimeFlip,
+    minWaitTimeStats: appEnv.minWaitTimeStats,
+    maxWaitTimeStats: appEnv.maxWaitTimeStats,
   };
 
   log('Your configuration:', configuration);
