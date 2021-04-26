@@ -25,6 +25,8 @@ async function main() {
     maxWaitTimeFlip: appEnv.maxWaitTimeFlip,
     minWaitTimeSearch: appEnv.minWaitTimeSearch,
     maxWaitTimeSearch: appEnv.maxWaitTimeSearch,
+    minWaitTimeStats: appEnv.minWaitTimeStats,
+    maxWaitTimeStats: appEnv.maxWaitTimeStats,
   };
 
   log('Your configuration:', configuration);
