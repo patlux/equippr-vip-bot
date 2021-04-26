@@ -31,8 +31,6 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
   // @ts-ignore
   const client = new Discord.Client({ _tokenType: '' });
 
-
-
   const token = conf.tokens[0];
 
   const startBot = async () => {
@@ -65,7 +63,6 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
             }, '');
             log(fieldsHumanized);
           }
-
         }
       }
     });
