@@ -12,6 +12,10 @@ const parseArray: EnvParser<string[]> = (str, defaultValue) => {
   return str != null ? (str.includes(',') ? str.split(',') : [str]) : defaultValue;
 };
 
+const getString: EnvParser<string>= (str, defaultValue) => {
+  return str != null ? str : defaultValue;
+};
+
 export interface AppEnv {
   tokens: string[];
   channelId: string | undefined;
@@ -23,6 +27,7 @@ export interface AppEnv {
   maxWaitTimeSearch: number;
   minWaitTimeStats: number;
   maxWaitTimeStats: number;
+  flipStyle: string;
 }
 
 const appEnv: AppEnv = {
@@ -36,6 +41,7 @@ const appEnv: AppEnv = {
   maxWaitTimeSearch: parseNumber(process.env.MAX_WAITTIME_Search, 310000),
   minWaitTimeStats: parseNumber(process.env.MIN_WAITTIME_STATS, 3600000),
   maxWaitTimeStats: parseNumber(process.env.MAX_WAITTIME_STATS, 3780000),
+  flipStyle: getString(process.env.FLIP_STYLE, "HEAD"),
 };
 
 export default appEnv;

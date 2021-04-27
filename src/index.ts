@@ -27,6 +27,7 @@ async function main() {
     maxWaitTimeSearch: appEnv.maxWaitTimeSearch,
     minWaitTimeStats: appEnv.minWaitTimeStats,
     maxWaitTimeStats: appEnv.maxWaitTimeStats,
+    flipStyle: appEnv.flipStyle,
   };
 
   log('Your configuration:', configuration);

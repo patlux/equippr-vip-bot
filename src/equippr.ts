@@ -3,11 +3,14 @@ import type { Client } from 'discord.js';
 import chalk from 'chalk';
 
 import { assert } from './assert';
-import { randomNumber, sleep } from './utils';
+import { randomNumber, sleep, randomHead, randomTail, getRandom } from './utils';
 import createLogger from './logger';
 import { getUserMentionsFromMessage, getEmbedsFields } from './discord';
 
 const { log, warn } = createLogger('equippr');
+
+
+
 
 export interface EquipprVipBotOptions {
   tokens: string[];
@@ -20,6 +23,7 @@ export interface EquipprVipBotOptions {
   maxWaitTimeSearch: number;
   minWaitTimeStats: number;
   maxWaitTimeStats: number;
+  flipStyle: string;
 }
 
 async function sendMessage(client: Client, channelId: string, msg: string): Promise<void> {
@@ -30,6 +34,30 @@ async function sendMessage(client: Client, channelId: string, msg: string): Prom
 }
 
 function createEquipprVipBot(conf: EquipprVipBotOptions) {
+  let isHead = true;
+
+  const getFlip = () => {
+    switch(conf.flipStyle)
+    {
+      case "ROTATE":
+        const randomStaySame = getRandom();
+        const current = isHead ? randomHead() : randomTail();
+
+        //randomly do the same side twice
+        if(randomStaySame <= 7)
+        {
+          isHead = !isHead;
+        }
+        
+        return current;
+      case "TAIL":
+        return randomTail();
+      case "HEAD":
+      default:
+        return randomHead();
+
+    }
+  }
   // @ts-ignore
   const client = new Discord.Client({ _tokenType: '' });
 
@@ -87,7 +115,7 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
 
     async function sendFlip() {
       try {
-        await sendMessage(client, conf.channelId, '!coinflip kopf 100');
+        await sendMessage(client, conf.channelId, '!coinflip '+getFlip()+' 100');
       } catch (error) {
         warn('Error while sendFlip():', error);
       }
