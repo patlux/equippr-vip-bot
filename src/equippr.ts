@@ -20,6 +20,7 @@ export interface EquipprVipBotOptions {
   minWaitTimeStats: number;
   maxWaitTimeStats: number;
   flipStyle: string;
+  usernamesOutput: string[];
 }
 
 export interface BotExecutor {
@@ -48,7 +49,7 @@ function createEquipprVipBot(conf: EquipprVipBotOptions): BotExecutor {
       const isMe = msg.author.username === client.user?.username;
       const isEquipprBot = msg.author.username === 'equippr';
 
-      if (isMe) {
+      if (isMe || conf.usernamesOutput.includes(msg.author.username)) {
         log(chalk`{gray ${msg.author.username}} :: ${msg.cleanContent}`);
       }
 

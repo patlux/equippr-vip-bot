@@ -28,6 +28,7 @@ async function main() {
     minWaitTimeStats: appEnv.minWaitTimeStats,
     maxWaitTimeStats: appEnv.maxWaitTimeStats,
     flipStyle: appEnv.flipStyle,
+    usernamesOutput: appEnv.usernamesOutput,
   };
 
   log('Your configuration:', configuration);
