@@ -1,11 +1,10 @@
 import Discord from 'discord.js';
-import type { Client } from 'discord.js';
 import chalk from 'chalk';
 
-import { assert } from './assert';
-import { randomNumber, sleep, randomHead, randomTail, getRandom } from './utils';
+import { randomNumber, sleep } from './utils';
 import createLogger from './logger';
-import { getUserMentionsFromMessage, getEmbedsFields } from './discord';
+import { getUserMentionsFromMessage, getEmbedsFields, sendMessage } from './discord';
+import { createFlipper } from './equippr-miner';
 
 const { log, warn } = createLogger('equippr');
 
@@ -23,35 +22,14 @@ export interface EquipprVipBotOptions {
   flipStyle: string;
 }
 
-async function sendMessage(client: Client, channelId: string, msg: string): Promise<void> {
-  const channel = client.channels.cache.get(channelId);
-  assert(channel, 'Channel not found');
-  // @ts-ignore
-  await channel.send(msg);
+export interface BotExecutor {
+  (): Promise<void>;
 }
 
-function createEquipprVipBot(conf: EquipprVipBotOptions) {
-  let isHead = true;
+function createEquipprVipBot(conf: EquipprVipBotOptions): BotExecutor {
+  const getFlip = createFlipper(conf.flipStyle);
 
-  const getFlip = () => {
-    switch (conf.flipStyle) {
-      case 'ROTATE':
-        const randomStaySame = getRandom();
-        const current = isHead ? randomHead() : randomTail();
-
-        //randomly do the same side twice
-        if (randomStaySame <= 7) {
-          isHead = !isHead;
-        }
-
-        return current;
-      case 'TAIL':
-        return randomTail();
-      case 'HEAD':
-      default:
-        return randomHead();
-    }
-  };
+  // eslint-disable-next-line
   // @ts-ignore
   const client = new Discord.Client({ _tokenType: '' });
 
@@ -119,7 +97,7 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
       try {
         await sendMessage(client, conf.channelId, '!search');
       } catch (error) {
-        warn('Error while sendFlip():', error);
+        warn('Error while sendSearch():', error);
       }
     }
 

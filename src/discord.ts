@@ -1,5 +1,8 @@
 import camelcase from 'camelcase';
+import type { Client } from 'discord.js';
 import { MessageMentions } from 'discord.js';
+
+import { assert } from './assert';
 
 export interface MessageEmbedLight {
   type: string | 'rich';
@@ -27,7 +30,7 @@ export function getEmbedsFields(embed: MessageEmbedLight): Record<string, string
   }, {});
 }
 
-export function getUserMentionsFromMessage(msg: string) {
+export function getUserMentionsFromMessage(msg: string): string[] {
   const mentions = msg.match(MessageMentions.USERS_PATTERN);
   if (mentions == null) {
     return [];
@@ -39,4 +42,12 @@ export function getUserMentionsFromMessage(msg: string) {
     }
     return mention;
   });
+}
+
+export async function sendMessage(client: Client, channelId: string, msg: string): Promise<void> {
+  const channel = client.channels.cache.get(channelId);
+  assert(channel, 'Channel not found');
+  // eslint-disable-next-line
+  // @ts-ignore
+  await channel.send(msg);
 }

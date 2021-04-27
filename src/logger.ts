@@ -24,6 +24,7 @@ export const warn = (...args: CWarn) =>
 export const err = (...args: CErr) =>
   console.log(chalk.gray(nowStr()), chalk.redBright('err '), ...args);
 
+// eslint-disable-next-line
 const noop = (..._args: unknown[]) => {};
 export const NoopLogger: Logger = { log: noop, warn: noop, err: noop };
 
