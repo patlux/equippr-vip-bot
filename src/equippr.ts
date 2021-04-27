@@ -9,9 +9,6 @@ import { getUserMentionsFromMessage, getEmbedsFields } from './discord';
 
 const { log, warn } = createLogger('equippr');
 
-
-
-
 export interface EquipprVipBotOptions {
   tokens: string[];
   channelId: string;
@@ -37,27 +34,24 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
   let isHead = true;
 
   const getFlip = () => {
-    switch(conf.flipStyle)
-    {
-      case "ROTATE":
+    switch (conf.flipStyle) {
+      case 'ROTATE':
         const randomStaySame = getRandom();
         const current = isHead ? randomHead() : randomTail();
 
         //randomly do the same side twice
-        if(randomStaySame <= 7)
-        {
+        if (randomStaySame <= 7) {
           isHead = !isHead;
         }
-        
+
         return current;
-      case "TAIL":
+      case 'TAIL':
         return randomTail();
-      case "HEAD":
+      case 'HEAD':
       default:
         return randomHead();
-
     }
-  }
+  };
   // @ts-ignore
   const client = new Discord.Client({ _tokenType: '' });
 
@@ -115,7 +109,7 @@ function createEquipprVipBot(conf: EquipprVipBotOptions) {
 
     async function sendFlip() {
       try {
-        await sendMessage(client, conf.channelId, '!coinflip '+getFlip()+' 100');
+        await sendMessage(client, conf.channelId, '!coinflip ' + getFlip() + ' 100');
       } catch (error) {
         warn('Error while sendFlip():', error);
       }
