@@ -29,6 +29,7 @@ export interface AppEnv {
   maxWaitTimeStats: number;
   flipStyle: string;
   usernamesOutput: string[];
+  adminUsernames: string[];
 }
 
 const appEnv: AppEnv = {
@@ -44,6 +45,7 @@ const appEnv: AppEnv = {
   maxWaitTimeStats: parseNumber(process.env.MAX_WAITTIME_STATS, 3780000),
   flipStyle: getString(process.env.FLIP_STYLE, 'HEAD'),
   usernamesOutput: parseArray(process.env.USERNAMES_OUTPUT, []),
+  adminUsernames: parseArray(process.env.ADMIN_USERNAMES, []),
 };
 
 export default appEnv;

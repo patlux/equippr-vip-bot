@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import type { EquipprVipBotOptions } from './equippr';
+import type { EquipprVipBotOptions } from './equippr-bot';
 import createEquipprVipBot from './equippr';
 import createLogger from './logger';
 import appEnv from './env';
@@ -29,6 +29,7 @@ async function main() {
     maxWaitTimeStats: appEnv.maxWaitTimeStats,
     flipStyle: appEnv.flipStyle,
     usernamesOutput: appEnv.usernamesOutput,
+    adminUsernames: appEnv.adminUsernames,
   };
 
   log('Your configuration:', configuration);

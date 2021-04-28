@@ -3,29 +3,13 @@ import chalk from 'chalk';
 
 import { randomNumber, sleep } from './utils';
 import createLogger from './logger';
-import { getUserMentionsFromMessage, getEmbedsFields, sendMessage } from './discord';
+import { sendMessage } from './discord';
 import { createFlipper } from './equippr-miner';
+import createEquipprOutputHandler from './equippr-output';
+import createEquipprCaptchaHandler from './equippr-captcha';
+import type { EquipprVipBotOptions, BotExecutor } from './equippr-bot';
 
 const { log, warn } = createLogger('equippr');
-
-export interface EquipprVipBotOptions {
-  tokens: string[];
-  channelId: string;
-  minWaitTimeMine: number;
-  maxWaitTimeMine: number;
-  minWaitTimeFlip: number;
-  maxWaitTimeFlip: number;
-  minWaitTimeSearch: number;
-  maxWaitTimeSearch: number;
-  minWaitTimeStats: number;
-  maxWaitTimeStats: number;
-  flipStyle: string;
-  usernamesOutput: string[];
-}
-
-export interface BotExecutor {
-  (): Promise<void>;
-}
 
 function createEquipprVipBot(conf: EquipprVipBotOptions): BotExecutor {
   const getFlip = createFlipper(conf.flipStyle);
@@ -35,6 +19,8 @@ function createEquipprVipBot(conf: EquipprVipBotOptions): BotExecutor {
   const client = new Discord.Client({ _tokenType: '' });
 
   const token = conf.tokens[0];
+  const equipprOutput = createEquipprOutputHandler({ client, conf });
+  const equipprCaptcha = createEquipprCaptchaHandler({ client, conf });
 
   const startBot = async () => {
     log('Login...');
@@ -42,31 +28,16 @@ function createEquipprVipBot(conf: EquipprVipBotOptions): BotExecutor {
     log('Login successful. Waiting to be ready..');
 
     client.on('message', (msg) => {
-      if (msg.channel.id !== conf.channelId) {
-        return;
-      }
+      try {
+        equipprCaptcha(msg);
 
-      const isMe = msg.author.username === client.user?.username;
-      const isEquipprBot = msg.author.username === 'equippr';
-
-      if (isMe || conf.usernamesOutput.includes(msg.author.username)) {
-        log(chalk`{gray ${msg.author.username}} :: ${msg.cleanContent}`);
-      }
-
-      const embed = msg.embeds.length > 0 ? msg.embeds[0] : null;
-      if (isEquipprBot && embed != null) {
-        const mentions = getUserMentionsFromMessage(embed.description || '');
-        if (client.user && mentions.includes(client.user.id)) {
-          log(chalk`{gray ${msg.author.username}} :: ${embed.description}`);
-
-          if (embed.fields.length > 0) {
-            const fields = getEmbedsFields(embed);
-            const fieldsHumanized = Object.keys(fields).reduce((acc, fieldKey) => {
-              return `${acc}, ${fieldKey}: ${fields[fieldKey]}`;
-            }, '');
-            log(fieldsHumanized);
-          }
+        if (msg.channel.id !== conf.channelId) {
+          return;
         }
+
+        equipprOutput(msg);
+      } catch (error) {
+        warn(`Error while message:`, error.message);
       }
     });
 
